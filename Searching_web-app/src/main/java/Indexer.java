@@ -2,10 +2,7 @@ import sun.security.jca.GetInstance;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by user on 13.10.2016.
@@ -13,34 +10,29 @@ import java.util.List;
 public class Indexer {
 
     private static Indexer instance;
-    private HashMap<String,HashSet<Integer>> indexer;
+    private HashMap<String,TreeSet<Integer>> wordToDocument;
     FileManager fm = new FileManager();
 
+    public HashMap<String,TreeSet<Integer>> getWordToDocument(){
+        return wordToDocument;
+    }
     private void Indexer(){
 
-
-        indexer = new HashMap<String, HashSet<Integer>>();
-
+     wordToDocument = new HashMap<String, TreeSet<Integer>>();
         int index=0;
-
         String[] arr;
-        long b = System.currentTimeMillis();
         Integer i=1;
-        HashSet values= new HashSet() ;
+       TreeSet values= new TreeSet() ;
        // for(int i=0;i<10;i++){
                 arr = fm.getFull_files().get(i).split(" ");
                 values.add(i);
                 for(int j=0;j<arr.length;j++) {
-                    if(indexer.get(arr[j])==null)
-                        indexer.put(arr[j],values);
+                    if(wordToDocument.get(arr[j])==null)
+                        wordToDocument.put(arr[j],values);
                     else
-                    indexer.get(arr[j]).add(i);
+                        wordToDocument.get(arr[j]).add(i);
                 }
                 values.clear();
-                // возможно нужно сразу из буфера читать строку и разбирать ее на кусочки, а не хранить
-        long e = System.currentTimeMillis();
-        System.out.println("Time is:"+(e-b));
-        //}
     }
     public static Indexer getInstance(){
 
@@ -50,14 +42,15 @@ public class Indexer {
     }
     public List<String> search(String word){
 
+        String Word = word.toLowerCase();
         ArrayList<String> results = new ArrayList<String>();
-        HashSet<Integer> file_num = new HashSet<Integer>();
-        if(indexer.get(word)!=null)
-            file_num = indexer.get(word);
+        TreeSet<Integer> file_num = new TreeSet<Integer>();
+        if(wordToDocument.get(Word)!=null)
+            file_num = wordToDocument.get(word);
         else
             System.out.println("No file which contains this word!!");
         for (Integer i:file_num) {
-           results.add(fm.getFull_files().get(i));
+           results.add(i.toString()+",");
         }
         return results;
     }
