@@ -9,6 +9,7 @@
 </form>
 <div class="result">
    <textarea id="search_results"><%= session.getAttribute("listOfdocs")%></textarea>
+    <textarea  placeholder="Sorry,there is nothing to search(" cols="#E6E6FA"></textarea>
 </div>
 </body>
 </html>
